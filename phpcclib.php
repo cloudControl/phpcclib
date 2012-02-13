@@ -522,6 +522,31 @@ class API {
         $data = array('addon' => $addonName);
         return $this->_executePost($resource, $data);
     }
+    
+
+    /**
+     * get sso login data
+     *
+     * @param string $applicationName applications name
+     * @param string $deploymentName deployments name
+     * @param string $addonName addons name
+     *
+     * @throws TokenRequiredError
+     * @throws BadRequestError
+     * @throws UnauthorizedError
+     * @throws ForbiddenError
+     * @throws GoneError
+     * @throws InternalServerError
+     * @throws NotImplementedError
+     * @throws ThrottledError
+     * @throws CCException
+     *
+     * @return stdObj sso login data
+     */
+    public function deployment_getAddonSSO($applicationName, $deploymentName, $addonName) {
+        $resource = sprintf('/app/%s/deployment/%s/addon/%s/login', $applicationName, $deploymentName, $addonName);
+        return $this->_executeGet($resource);
+    }
 
     /**
      * creates an alias for a deployment.
@@ -809,8 +834,8 @@ class API {
      *
      * @return stdObj contains billing account data
      */
-    public function billingAccount_create($userName, $billingName, $data) {
-        $resource = sprintf('/user/%s/billing/%s/', $userName, $billingName);
+    public function billingAccount_create($userName, $data) {
+        $resource = sprintf('/user/%s/billing/', $userName);
         return $this->_executePost($resource, $data);
     }
 
@@ -950,6 +975,43 @@ class API {
      */
     public function addon_getList() {
         return $this->_executeGet('/addon/', $requiresToken=false);
+    }
+    
+    /**
+     * return list of all support plans
+     *
+     * @throws BadRequestError
+     * @throws ForbiddenError
+     * @throws GoneError
+     * @throws InternalServerError
+     * @throws NotImplementedError
+     * @throws ThrottledError
+     * @throws CCException
+     *
+     * @return array<stdObj> contains all available support plans
+     */
+    public function support_getList() {
+        return $this->_executeGet('/support/', $requiresToken=false);
+    }
+    
+    /**
+     * return a single support plan
+     *
+     * @param string $planName name of the support plan
+     * 
+     * @throws BadRequestError
+     * @throws ForbiddenError
+     * @throws GoneError
+     * @throws InternalServerError
+     * @throws NotImplementedError
+     * @throws ThrottledError
+     * @throws CCException
+     *
+     * @return array<stdObj> contains all available support plans
+     */
+    public function support_getDetails($planName) {
+        $resource = sprintf('/support/%s/', $planName);
+        return $this->_executeGet($resource, $requiresToken=false);
     }
 
     /**
