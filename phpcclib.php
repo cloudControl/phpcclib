@@ -1,4 +1,7 @@
 <?php
+
+set_include_path('.:/Users/denis/pear/share/pear');
+
 /**
  * require Pear::HTTP_Request2, Pear::Net_URL2 packages
  */
@@ -522,7 +525,7 @@ class API {
         $data = array('addon' => $addonName);
         return $this->_executePost($resource, $data);
     }
-    
+
 
     /**
      * get sso login data
@@ -976,7 +979,7 @@ class API {
     public function addon_getList() {
         return $this->_executeGet('/addon/', $requiresToken=false);
     }
-    
+
     /**
      * return list of all support plans
      *
@@ -993,12 +996,12 @@ class API {
     public function support_getList() {
         return $this->_executeGet('/support/', $requiresToken=false);
     }
-    
+
     /**
      * return a single support plan
      *
      * @param string $planName name of the support plan
-     * 
+     *
      * @throws BadRequestError
      * @throws ForbiddenError
      * @throws GoneError
@@ -1181,6 +1184,44 @@ class API {
  */
 
 class CCException extends Exception {
+    public function __construct($message, $status)
+    {
+        $this->message = $message;
+
+
+		$msgs = array();
+		$obj = json_decode($message);
+		if (json_last_error() === JSON_ERROR_NONE && !empty($obj)) {
+			$rc = "";
+			$errors = array();
+			foreach ($obj as $k => $v) {
+				if ($k == "rc")
+					$rc = $v;
+				else if ($k == "error")
+					$errors = $v;
+			}
+
+			if (count($errors) > 0)
+				$msgs = $errors;
+			else if (strlen($rc) > 0)
+				$this->message = $rc;
+			else
+				$msgs = $obj;
+		}
+
+		if (count($msgs) > 0) {
+            $this->message = '';
+
+
+			if (is_array($msgs) || $msgs instanceof Traversable || $msgs instanceof stdClass) {
+				foreach ($msgs as $k => $v) {
+					$this->message .= sprintf("%s: %s\n", $k, $v);
+				}
+			}else
+				$this->message = $msgs;
+
+        }
+    }
 }
 
 /*
@@ -1210,24 +1251,12 @@ class TokenRequiredError extends CCException {
  */
 
 class BadRequestError extends CCException {
-    private $_msgs = array();
-
-    public function __construct($message)
+    public function __construct($message, $status)
     {
-        $this->message = 'BadRequest';
-        /*
-         * You will get a string like this
-         * Bad Request {"lastname": "This field is required.", "firstname": "This field is required."}
-         * therefore we cut the first 12 chars from errorMessage
-         */
-        $obj = json_decode(substr($message, 12));
-
-        if (json_last_error() === JSON_ERROR_NONE && !empty($obj)) {
-            $this->message = '';
-            foreach ($obj as $k => $v) {
-                $this->message .= sprintf("%s: %s\n", $k, $v);
-            }
-        }
+		if (substr($message, 0, 11) == "Bad Request")
+			parent::__construct(substr($message, 12), $status);
+		else
+			parent::__construct($message, $status);
     }
 }
 
@@ -1499,6 +1528,7 @@ class Request {
         #
         //$headers['Content-Length'] = strlen($body);
         $headers['Accept-Encoding'] = 'compress, gzip';
+		$headers['Accept'] = 'application/json';
         #
         # Finally we fire the actual request.
         #
