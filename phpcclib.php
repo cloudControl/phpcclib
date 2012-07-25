@@ -1186,8 +1186,6 @@ class CCException extends Exception {
     {
         $this->message = $message;
 
-
-		$msgs = array();
 		$obj = json_decode($message);
 		if (json_last_error() === JSON_ERROR_NONE && !empty($obj)) {
 			$rc = "";
@@ -1199,25 +1197,17 @@ class CCException extends Exception {
 					$errors = $v;
 			}
 
-			if (count($errors) > 0)
-				$msgs = $errors;
-			else if (strlen($rc) > 0)
+			if (count($errors) > 0) {
+				$this->message = '';
+
+				foreach ($msgs as $k => $v) {
+					$this->message .= sprintf("%s: %s\n", $k, $v);
+				}
+			} else if (strlen($rc) > 0)
 				$this->message = $rc;
 			else
 				$this->message = $message;
 		}
-
-		if (count($msgs) > 0) {
-            $this->message = '';
-
-			if (is_array($msgs) || $msgs instanceof Traversable || $msgs instanceof stdClass) {
-				foreach ($msgs as $k => $v) {
-					$this->message .= sprintf("%s: %s\n", $k, $v);
-				}
-			}else
-				$this->message = $message;
-
-        }
     }
 }
 
