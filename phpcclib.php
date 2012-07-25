@@ -1,5 +1,6 @@
 <?php
 
+set_include_path(".:/Users/denis/pear/share/pear");
 /**
  * require Pear::HTTP_Request2, Pear::Net_URL2 packages
  */
@@ -1200,13 +1201,19 @@ class CCException extends Exception {
 			if (count($errors) > 0) {
 				$this->message = '';
 
-				foreach ($msgs as $k => $v) {
+				foreach ($errors as $k => $v) {
 					$this->message .= sprintf("%s: %s\n", $k, $v);
 				}
 			} else if (strlen($rc) > 0)
 				$this->message = $rc;
 			else
-				$this->message = $message;
+			{
+				//fallback, old error-format
+				$this->message = '';
+				foreach ($obj as $k => $v) {
+					$this->message .= sprintf("%s: %s\n", $k, $v);
+				}
+			}
 		}
     }
 }
