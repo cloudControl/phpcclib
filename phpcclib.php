@@ -1,7 +1,5 @@
 <?php
 
-set_include_path('.:/Users/denis/pear/share/pear');
-
 /**
  * require Pear::HTTP_Request2, Pear::Net_URL2 packages
  */
@@ -45,7 +43,7 @@ class API {
      * api version
      * @var string
      */
-    const VERSION = '0.1.3.5';
+    const VERSION = '0.1.3.6';
 
     /**
      * token length - to check the token
