@@ -1,6 +1,5 @@
 <?php
 
-set_include_path(".:/Users/denis/pear/share/pear");
 /**
  * require Pear::HTTP_Request2, Pear::Net_URL2 packages
  */
