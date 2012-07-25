@@ -1204,19 +1204,18 @@ class CCException extends Exception {
 			else if (strlen($rc) > 0)
 				$this->message = $rc;
 			else
-				$msgs = $obj;
+				$this->message = $message;
 		}
 
 		if (count($msgs) > 0) {
             $this->message = '';
-
 
 			if (is_array($msgs) || $msgs instanceof Traversable || $msgs instanceof stdClass) {
 				foreach ($msgs as $k => $v) {
 					$this->message .= sprintf("%s: %s\n", $k, $v);
 				}
 			}else
-				$this->message = $msgs;
+				$this->message = $message;
 
         }
     }
