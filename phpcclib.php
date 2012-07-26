@@ -1232,10 +1232,9 @@ class ConnectionException extends CCException {
  */
 
 class TokenRequiredError extends CCException {
-    public function __toString()
-    {
-        return 'No valid token. Use create_token(email, password) to get a new one';
-    }
+	public function __construct() {
+		parent::__construct("No valid token. Use create_token(email, password) to get a new one", 0);
+	}
 }
 
 /*
@@ -1461,17 +1460,18 @@ class Request {
         $request = new HTTP_Request2($url);
         $request->setConfig('ssl_verify_peer', API::SSL_VERIFY_PEER);
 
-        $methods = array(
-            'options' => HTTP_Request2::METHOD_OPTIONS,
-            'get' => HTTP_Request2::METHOD_GET,
-            'head' => HTTP_Request2::METHOD_HEAD,
-            'post' => HTTP_Request2::METHOD_POST,
-            'put' => HTTP_Request2::METHOD_PUT,
-            'delete' => HTTP_Request2::METHOD_DELETE,
-            'trace' => HTTP_Request2::METHOD_TRACE,
-            'connect' => HTTP_Request2::METHOD_CONNECT
-        );
-        $request->setMethod($methods[strtolower($method)]);
+        //$methods = array(
+            //'options' => HTTP_Request2::METHOD_OPTIONS,
+            //'get' => HTTP_Request2::METHOD_GET,
+            //'head' => HTTP_Request2::METHOD_HEAD,
+            //'post' => HTTP_Request2::METHOD_POST,
+            //'put' => HTTP_Request2::METHOD_PUT,
+            //'delete' => HTTP_Request2::METHOD_DELETE,
+            //'trace' => HTTP_Request2::METHOD_TRACE,
+            //'connect' => HTTP_Request2::METHOD_CONNECT
+        //);
+        //$request->setMethod($methods[strtolower($method)]);
+		$request->setMethod($method);
 
         #
         # If the current API instance has a valid token we add the Authorization
@@ -1497,9 +1497,8 @@ class Request {
                 $url = $request->getUrl();
                 $url->setQueryVariables($data);
             } else {
-                // works with post and put
-                $request->addPostParameter($data);
-                $request->setBody(http_build_query($data));
+                $request->setBody(json_encode($data));
+				$headers['Content-Type'] = 'application/json';
             }
         }
 
@@ -1509,14 +1508,7 @@ class Request {
         # the wild.
         #
         $headers['User-Agent'] = sprintf('phpcclib/%s', $this->_version);
-        #
-        # The API expects PUT or POST data to be x-www-form-urlencoded so we
-        # also set the correct Content-Type header.
-        #
-        if (strtoupper($method) == 'PUT' || strtoupper($method) == 'POST') {
-            $headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        }
-        #
+		#
         # We also set the Content-Length and Accept-Encoding headers.
         #
         //$headers['Content-Length'] = strlen($body);
