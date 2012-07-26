@@ -1197,18 +1197,18 @@ class CCException extends Exception {
 					$errors = $v;
 			}
 
-			if (count($errors) > 0) {
-				$this->message = '';
+			$this->message = '';
 
+			if (strlen($rc) > 0)
+				$this->message .= "$rc\n";
+
+			if (count($errors) > 0) {
 				foreach ($errors as $k => $v) {
 					$this->message .= sprintf("%s: %s\n", $k, $v);
 				}
-			} else if (strlen($rc) > 0)
-				$this->message = $rc;
-			else
-			{
-				//fallback, old error-format
-				$this->message = '';
+			}
+
+			if ($this->message == '') {
 				foreach ($obj as $k => $v) {
 					$this->message .= sprintf("%s: %s\n", $k, $v);
 				}
