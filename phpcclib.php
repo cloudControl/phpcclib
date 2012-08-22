@@ -42,11 +42,11 @@ class API {
      * api version
      * @var string
      */
-    const VERSION = '0.1.3.5';
+    const VERSION = '0.1.3.6';
 
     /**
      * token length - to check the token
-     * @var boolean
+     * @var int
      */
     const TOKEN_STRLEN = 30;
 
@@ -56,7 +56,6 @@ class API {
     /**
      * constructor
      *
-     * @param string $token
      * @param string $url
      *
      * @return API
@@ -1034,13 +1033,14 @@ class API {
      *
      * @return stdObj contains worker data
      */
-    public function worker_create($applicationName, $deploymentName, $command, $parameter='') {
+    public function worker_create($applicationName, $deploymentName, $command, $parameter='', $size=1) {
         $resource = sprintf('/app/%s/deployment/%s/worker/', $applicationName, $deploymentName);
         $data = array();
         $data['command'] = $command;
         if (strlen($parameter) > 0) {
             $data['params'] = $parameter;
         }
+        $data['size'] = $size;
         return $this->_executePost($resource, $data);
     }
 
