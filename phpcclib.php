@@ -490,9 +490,10 @@ class API {
             $deploymentName,
             $logType
         );
+        $resource = $url;
         if (!is_null($lastTime)) {
             $timestamp = strtotime($lastTime);
-            $resource = sprintf('%s?timestamp=%s', $url, $lastTime);
+            $resource = sprintf('%s?timestamp=%s', $url, $timestamp);
         }
         return $this->_executeGet($resource);
     }
