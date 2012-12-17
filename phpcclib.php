@@ -1554,41 +1554,45 @@ class Request {
         $status = $resp->getStatus();
         $body = $resp->getBody();
 
-        if (in_array($status, array(200, 201, 204)) !== false) {
-            return $body;
-        }
-        else if ($status == 400) {
-            throw new BadRequestError($body, $status);
-        }
-        else if ($status == 401) {
-            throw new UnauthorizedError($body, $status);
-        }
-        else if ($status == 403) {
-            throw new ForbiddenError($body, $status);
-        }
-        else if ($status == 409) {
-            throw new ConflictDuplicateError($body, $status);
-        }
-        else if ($status == 410) {
-            throw new GoneError($body, $status);
-        }
-        #
-        # 500 INTERNAL SERVER ERRORs normally shouldn't happen...
-        #
-        else if ($status == 500) {
-            throw new InternalServerError($body, $status);
-        }
-        else if ($status == 501) {
-            throw new NotImplementedError($body, $status);
-        }
-        else if ($status == 503) {
-            throw new ThrottledError($body, $status);
-        }
-        #
-        # throw CCException anyway
-        #
-        else {
-            throw new CCException ($body, $status);
+        switch ($status) {
+            case 200:
+            case 201:
+            case 204:
+                return $body;
+                break;
+            case 400:
+                throw new BadRequestError($body, $status);
+                break;
+            case 401:
+                throw new UnauthorizedError($body, $status);
+                break;
+            case 403:
+                throw new ForbiddenError($body, $status);
+                break;
+            case 409:
+                throw new ConflictDuplicateError($body, $status);
+                break;
+            case 410:
+                throw new GoneError($body, $status);
+                break;
+            #
+            # 500 INTERNAL SERVER ERRORs normally shouldn't happen...
+            #
+            case 500:
+                throw new InternalServerError($body, $status);
+                break;
+            case 501:
+                throw new NotImplementedError($body, $status);
+                break;
+            case 503:
+                throw new ThrottledError($body, $status);
+                break;
+            #
+            # throw CCException anyway
+            #
+            default:
+                throw new CCException ($body, $status);
+                break;
         }
     }
 }
