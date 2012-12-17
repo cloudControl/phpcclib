@@ -522,7 +522,7 @@ class API {
         $data = array('addon' => $addonName);
         return $this->_executePost($resource, $data);
     }
-    
+
 
     /**
      * get sso login data
@@ -976,7 +976,7 @@ class API {
     public function addon_getList() {
         return $this->_executeGet('/addon/', $requiresToken=false);
     }
-    
+
     /**
      * return list of all support plans
      *
@@ -993,12 +993,12 @@ class API {
     public function support_getList() {
         return $this->_executeGet('/support/', $requiresToken=false);
     }
-    
+
     /**
      * return a single support plan
      *
      * @param string $planName name of the support plan
-     * 
+     *
      * @throws BadRequestError
      * @throws ForbiddenError
      * @throws GoneError
@@ -1550,41 +1550,49 @@ class Request {
         # All non success STATUS CODES raise an exception containing
         # the API error message.
         #
-        if (in_array($resp->getStatus(), array(200, 201, 204)) !== false) {
-            return $resp->getBody();
-        }
-        else if ($resp->getStatus() == 400) {
-            throw new BadRequestError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 401) {
-            throw new UnauthorizedError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 403) {
-            throw new ForbiddenError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 409) {
-            throw new ConflictDuplicateError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 410) {
-            throw new GoneError($resp->getBody(), $resp->getStatus());
-        }
-        #
-        # 500 INTERNAL SERVER ERRORs normally shouldn't happen...
-        #
-        else if ($resp->getStatus() == 500) {
-            throw new InternalServerError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 501) {
-            throw new NotImplementedError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 503) {
-            throw new ThrottledError($resp->getBody(), $resp->getStatus());
-        }
-        #
-        # throw CCException anyway
-        #
-        else {
-            throw new CCException ($resp->getBody(), $resp->getStatus());
+
+        $status = $resp->getStatus();
+        $body = $resp->getBody();
+
+        switch ($status) {
+            case 200:
+            case 201:
+            case 204:
+                return $body;
+                break;
+            case 400:
+                throw new BadRequestError($body, $status);
+                break;
+            case 401:
+                throw new UnauthorizedError($body, $status);
+                break;
+            case 403:
+                throw new ForbiddenError($body, $status);
+                break;
+            case 409:
+                throw new ConflictDuplicateError($body, $status);
+                break;
+            case 410:
+                throw new GoneError($body, $status);
+                break;
+            #
+            # 500 INTERNAL SERVER ERRORs normally shouldn't happen...
+            #
+            case 500:
+                throw new InternalServerError($body, $status);
+                break;
+            case 501:
+                throw new NotImplementedError($body, $status);
+                break;
+            case 503:
+                throw new ThrottledError($body, $status);
+                break;
+            #
+            # throw CCException anyway
+            #
+            default:
+                throw new CCException ($body, $status);
+                break;
         }
     }
 }
