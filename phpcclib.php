@@ -522,7 +522,7 @@ class API {
         $data = array('addon' => $addonName);
         return $this->_executePost($resource, $data);
     }
-    
+
 
     /**
      * get sso login data
@@ -976,7 +976,7 @@ class API {
     public function addon_getList() {
         return $this->_executeGet('/addon/', $requiresToken=false);
     }
-    
+
     /**
      * return list of all support plans
      *
@@ -993,12 +993,12 @@ class API {
     public function support_getList() {
         return $this->_executeGet('/support/', $requiresToken=false);
     }
-    
+
     /**
      * return a single support plan
      *
      * @param string $planName name of the support plan
-     * 
+     *
      * @throws BadRequestError
      * @throws ForbiddenError
      * @throws GoneError
@@ -1550,41 +1550,45 @@ class Request {
         # All non success STATUS CODES raise an exception containing
         # the API error message.
         #
-        if (in_array($resp->getStatus(), array(200, 201, 204)) !== false) {
-            return $resp->getBody();
+
+        $status = $resp->getStatus();
+        $body = $resp->getBody();
+
+        if (in_array($status, array(200, 201, 204)) !== false) {
+            return $body;
         }
-        else if ($resp->getStatus() == 400) {
-            throw new BadRequestError($resp->getBody(), $resp->getStatus());
+        else if ($status == 400) {
+            throw new BadRequestError($body, $status);
         }
-        else if ($resp->getStatus() == 401) {
-            throw new UnauthorizedError($resp->getBody(), $resp->getStatus());
+        else if ($status == 401) {
+            throw new UnauthorizedError($body, $status);
         }
-        else if ($resp->getStatus() == 403) {
-            throw new ForbiddenError($resp->getBody(), $resp->getStatus());
+        else if ($status == 403) {
+            throw new ForbiddenError($body, $status);
         }
-        else if ($resp->getStatus() == 409) {
-            throw new ConflictDuplicateError($resp->getBody(), $resp->getStatus());
+        else if ($status == 409) {
+            throw new ConflictDuplicateError($body, $status);
         }
-        else if ($resp->getStatus() == 410) {
-            throw new GoneError($resp->getBody(), $resp->getStatus());
+        else if ($status == 410) {
+            throw new GoneError($body, $status);
         }
         #
         # 500 INTERNAL SERVER ERRORs normally shouldn't happen...
         #
-        else if ($resp->getStatus() == 500) {
-            throw new InternalServerError($resp->getBody(), $resp->getStatus());
+        else if ($status == 500) {
+            throw new InternalServerError($body, $status);
         }
-        else if ($resp->getStatus() == 501) {
-            throw new NotImplementedError($resp->getBody(), $resp->getStatus());
+        else if ($status == 501) {
+            throw new NotImplementedError($body, $status);
         }
-        else if ($resp->getStatus() == 503) {
-            throw new ThrottledError($resp->getBody(), $resp->getStatus());
+        else if ($status == 503) {
+            throw new ThrottledError($body, $status);
         }
         #
         # throw CCException anyway
         #
         else {
-            throw new CCException ($resp->getBody(), $resp->getStatus());
+            throw new CCException ($body, $status);
         }
     }
 }
