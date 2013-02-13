@@ -1,7 +1,7 @@
 {
-    "name": "phpcclib",
+    "name": "cloudControl/phpcclib",
     "type": "library",
-    "description": "cloudControl Api helper",
+    "description": "cloudControl api helper",
     "keywords": ["cloudControl"],
     "homepage": "https://github.com/cloudControl/phpcclib",
     "license": "Apache License",
