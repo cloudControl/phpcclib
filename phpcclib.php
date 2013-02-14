@@ -1,8 +1,6 @@
 <?php
-namespace CloudControl;
-
 /**
- * require Pear::\HTTP_Request2
+ * require Pear::HTTP_Request2
  */
 require_once 'HTTP/Request2.php';
 
@@ -1182,7 +1180,7 @@ class API {
  * base cloudControl api exception
  */
 
-class CCException extends \Exception {
+class CCException extends Exception {
 }
 
 /*
@@ -1351,7 +1349,7 @@ class Request {
      * @return string json encoded servers response
      */
     public function post($resource, $data) {
-        return $this->_request($resource, \HTTP_Request2::METHOD_POST, $data);
+        return $this->_request($resource, HTTP_Request2::METHOD_POST, $data);
     }
 
     /**
@@ -1371,7 +1369,7 @@ class Request {
      * @return string json encoded servers response
      */
     public function get($resource, $data=array()) {
-        return $this->_request($resource, \HTTP_Request2::METHOD_GET, $data);
+        return $this->_request($resource, HTTP_Request2::METHOD_GET, $data);
     }
 
     /**
@@ -1392,7 +1390,7 @@ class Request {
      * @return string json encoded servers response
      */
     public function put($resource, $data) {
-        return $this->_request($resource, \HTTP_Request2::METHOD_PUT, $data);
+        return $this->_request($resource, HTTP_Request2::METHOD_PUT, $data);
     }
 
     /**
@@ -1412,11 +1410,11 @@ class Request {
      * @return string json encoded servers response
      */
     public function delete($resource) {
-        return $this->_request($resource, \HTTP_Request2::METHOD_DELETE);
+        return $this->_request($resource, HTTP_Request2::METHOD_DELETE);
     }
 
     /**
-     * we use the Pear::\HTTP_Request2 for all the heavy HTTP protocol lifting.
+     * we use the Pear::HTTP_Request2 for all the heavy HTTP protocol lifting.
      *
      * @param string $resource api-resource
      * @param string $method request method [default:"GET"]
@@ -1436,20 +1434,20 @@ class Request {
      *
      * @return string json encoded servers response
      */
-    private function _request($resource, $method=\HTTP_Request2::METHOD_GET, $data=array(), $headers=array()) {
+    private function _request($resource, $method=HTTP_Request2::METHOD_GET, $data=array(), $headers=array()) {
         $url = $this->_url . $resource;
-        $request = new \HTTP_Request2($url);
+        $request = new HTTP_Request2($url);
         $request->setConfig('ssl_verify_peer', API::SSL_VERIFY_PEER);
 
         $methods = array(
-            'options' => \HTTP_Request2::METHOD_OPTIONS,
-            'get' => \HTTP_Request2::METHOD_GET,
-            'head' => \HTTP_Request2::METHOD_HEAD,
-            'post' => \HTTP_Request2::METHOD_POST,
-            'put' => \HTTP_Request2::METHOD_PUT,
-            'delete' => \HTTP_Request2::METHOD_DELETE,
-            'trace' => \HTTP_Request2::METHOD_TRACE,
-            'connect' => \HTTP_Request2::METHOD_CONNECT
+            'options' => HTTP_Request2::METHOD_OPTIONS,
+            'get' => HTTP_Request2::METHOD_GET,
+            'head' => HTTP_Request2::METHOD_HEAD,
+            'post' => HTTP_Request2::METHOD_POST,
+            'put' => HTTP_Request2::METHOD_PUT,
+            'delete' => HTTP_Request2::METHOD_DELETE,
+            'trace' => HTTP_Request2::METHOD_TRACE,
+            'connect' => HTTP_Request2::METHOD_CONNECT
         );
         $request->setMethod($methods[strtolower($method)]);
 
@@ -1465,7 +1463,7 @@ class Request {
         if ($this->_token) {
             $headers['Authorization'] = sprintf('cc_auth_token="%s"', $this->_token);
         } else if ($this->_email && $this->_password) {
-            $request->setAuth($this->_email, $this->_password, \HTTP_Request2::AUTH_BASIC);
+            $request->setAuth($this->_email, $this->_password, HTTP_Request2::AUTH_BASIC);
         }
 
         #
@@ -1473,7 +1471,7 @@ class Request {
         # the request method we therefore use urlencode from urllib.
         #
         if (!empty($data)) {
-            if ($request->getMethod() == \HTTP_Request2::METHOD_GET) {
+            if ($request->getMethod() == HTTP_Request2::METHOD_GET) {
                 $url = $request->getUrl();
                 $url->setQueryVariables($data);
             } else {
@@ -1512,7 +1510,7 @@ class Request {
                 $response = $request->send();
                 return $this->_return($response);
             }
-            catch (\HTTP_Request2_Exception $e) {
+            catch (HTTP_Request2_Exception $e) {
                 # if we could not reach the API we wait 1s and try again
                 sleep(1);
                 # if we tried for the fifth time we give up - and cry a little
@@ -1526,7 +1524,7 @@ class Request {
     /**
      * evaluate response object
      *
-     * @param \HTTP_Request2_Response $resp
+     * @param HTTP_Request2_Response $resp
      *
      * @throws BadRequestError
      * @throws UnauthorizedError
