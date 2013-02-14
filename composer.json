@@ -16,6 +16,6 @@
         }
     ],
     "autoload": {
-        "files": ['phpcclib.php']
+        "files": ["phpcclib.php"]
     }
 }
