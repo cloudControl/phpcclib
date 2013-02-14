@@ -7,7 +7,6 @@
     "homepage": "https://github.com/cloudControl/phpcclib",
     "license": "Apache License",
     "require": {
-        "pear-pear/Mail_Mime": "*",
         "pear-pear/HTTP_Request2": "*"
     },
     "repositories": [
@@ -15,5 +14,8 @@
             "type": "pear",
             "url": "http://pear.php.net"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-0": { "CloudControl": "" }
+    }
 }
