@@ -6,14 +6,13 @@
     "keywords": ["cloudControl"],
     "homepage": "https://github.com/cloudControl/phpcclib",
     "license": "Apache License",
+    "require": {
+        "pear-pear/HTTP_Request2":   "*"
+    },
     "repositories": [
         {
             "type": "pear",
             "url": "http://pear.php.net"
         }
-    ],
-    "require": {
-        "php": ">=5.3.0",
-        "pear-pear.php.net/http_request2": "*"
-    }
+    ]
 }
