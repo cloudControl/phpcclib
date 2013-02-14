@@ -16,6 +16,6 @@
         }
     ],
     "autoload": {
-        "classmap": ["phpcclib.php"]
+        "psr-0": { "CloudControl": "" }
     }
 }
