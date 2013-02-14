@@ -36,8 +36,8 @@ require 'vendor/autoload.php';
 use CloudControl\API;
 
 $api = new Api();
-$email = 'mw@cloudcontrol.de';
-$password = 'yeah1834';
+$email = 'your@example.com';
+$password = 's€cr€t';
 $api->auth($email, $password);
 
 foreach($api->application_getList() as $app){
