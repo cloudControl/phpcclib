@@ -15,7 +15,5 @@
             "url": "http://pear.php.net"
         }
     ],
-    "autoload": {
-        "files": ["phpcclib.php"]
-    }
+    "include-path": ["/"]
 }
