@@ -15,5 +15,7 @@
             "url": "http://pear.php.net"
         }
     ],
-    "include-path": ["/"]
+    "autoload": {
+        "classmap": ["phpcclib.php"]
+    }
 }
