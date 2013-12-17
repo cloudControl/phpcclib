@@ -493,7 +493,7 @@ class API {
         $resource = $url;
         if (!is_null($lastTime)) {
             $timestamp = strtotime($lastTime);
-            $resource = sprintf('%s?timestamp=%s', $url, $timestamp);
+            $resource = sprintf('%s?timestamp=%s', $url, $lastTime);
         }
         return $this->_executeGet($resource);
     }
@@ -522,7 +522,7 @@ class API {
         $data = array('addon' => $addonName);
         return $this->_executePost($resource, $data);
     }
-    
+
 
     /**
      * get sso login data
@@ -976,7 +976,7 @@ class API {
     public function addon_getList() {
         return $this->_executeGet('/addon/', $requiresToken=false);
     }
-    
+
     /**
      * return list of all support plans
      *
@@ -993,12 +993,12 @@ class API {
     public function support_getList() {
         return $this->_executeGet('/support/', $requiresToken=false);
     }
-    
+
     /**
      * return a single support plan
      *
      * @param string $planName name of the support plan
-     * 
+     *
      * @throws BadRequestError
      * @throws ForbiddenError
      * @throws GoneError
