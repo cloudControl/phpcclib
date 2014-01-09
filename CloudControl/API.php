@@ -463,8 +463,8 @@ class API {
 
     /**
      * Get a deployment's log by log_type.
-     * log_type choices are 'access' or 'error'
-     * last_time is optional - any English textual datetime description '2010-8-30 17:04:22' Y-m-d H:i:s
+     * logType choices are 'access', 'error', 'worker' or 'deploy'
+     * lastTime is optional - any English textual datetime description '2010-8-30 17:04:22' Y-m-d H:i:s or a timestamp as int or float
      *
      * @param string $applicationName applications name
      * @param string $deploymentName deployments name
@@ -492,7 +492,11 @@ class API {
         );
         $resource = $url;
         if (!is_null($lastTime)) {
-            $timestamp = strtotime($lastTime);
+            if (is_string($lastTime)) {
+                $timestamp = strtotime($lastTime);
+            } else {
+                $timestamp = $lastTime;
+            }
             $resource = sprintf('%s?timestamp=%s', $url, $timestamp);
         }
         return $this->_executeGet($resource);
