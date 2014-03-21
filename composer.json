@@ -7,7 +7,7 @@
     "homepage": "https://github.com/cloudControl/phpcclib",
     "license": "Apache License",
     "require": {
-        "pear-pear/HTTP_Request2": "*"
+        "pear-pear.php.net/HTTP_Request2": "2.2.1"
     },
     "repositories": [
         {
