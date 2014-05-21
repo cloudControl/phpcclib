@@ -30,7 +30,7 @@ class API {
      * predefined API URL
      * @const string
      */
-    const URL = 'https://api.cloudcontrol.com';
+    const URL = 'https://api.cloudcontrolled.com';
 
     /**
      * set certificate validation (if https protocol used)
