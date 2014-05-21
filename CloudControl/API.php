@@ -30,19 +30,19 @@ class API {
      * predefined API URL
      * @const string
      */
-    const URL = 'https://api.cloudcontrol.com';
+    const URL = 'https://api.cloudcontrolled.com';
 
     /**
      * set certificate validation (if https protocol used)
      * @const boolean
      */
-    const SSL_VERIFY_PEER = false;
+    const SSL_VERIFY_PEER = true;
 
     /**
      * api version
      * @var string
      */
-    const VERSION = '0.1.4';
+    const VERSION = '0.1.5';
 
     /**
      * token length - to check the token

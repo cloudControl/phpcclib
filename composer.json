@@ -1,6 +1,5 @@
 {
     "name": "cloudcontrol/phpcclib",
-    "version": "0.1.3.9",
     "type": "library",
     "description": "cloudControl api helper",
     "keywords": ["cloudControl"],
