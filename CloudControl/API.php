@@ -36,7 +36,7 @@ class API {
      * set certificate validation (if https protocol used)
      * @const boolean
      */
-    const SSL_VERIFY_PEER = false;
+    const SSL_VERIFY_PEER = true;
 
     /**
      * api version
