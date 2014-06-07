@@ -6,24 +6,24 @@ namespace CloudControl;
 require_once 'HTTP/Request2.php';
 
 /*
- phpcclib
+  phpcclib
 
- library for accessing the cloudControl API using PHP
+  library for accessing the cloudControl API using PHP
 
- Copyright 2010 cloudControl UG (haftungsbeschraenkt)
+  Copyright 2010 cloudControl UG (haftungsbeschraenkt)
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
- http://www.apache.org/licenses/LICENSE-2.0
+  http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
-*/
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ */
 
 class API {
     /**
@@ -61,7 +61,7 @@ class API {
      * @return API
      */
     public function __construct($url=Api::URL) {
-        $this->setUrl($url);
+	$this->setUrl($url);
     }
 
     /**
@@ -72,7 +72,7 @@ class API {
      * @return void
      */
     public function setUrl($url) {
-        $this->_url = $url;
+	$this->_url = $url;
     }
 
     /**
@@ -81,7 +81,7 @@ class API {
      * @return string
      */
     public function getUrl() {
-        return $this->_url;
+	return $this->_url;
     }
 
     /**
@@ -97,10 +97,10 @@ class API {
      * @return void
      */
     public function requiresToken() {
-        $token = $this->getToken();
-        if (!$this->checkToken($token)) {
-            throw new TokenRequiredError();
-        }
+	$token = $this->getToken();
+	if (!$this->checkToken($token)) {
+	    throw new TokenRequiredError();
+	}
     }
 
     /**
@@ -123,11 +123,11 @@ class API {
      * @return boolean
      */
     public function auth($email, $password) {
-        $request = new Request($this->_url);
-        $request->setAuth($email, $password);
-        $content = $request->post('/token/', array());
-        $tokenObject = $this->_jsonDecode($content);
-        return $this->setToken($tokenObject->token);
+	$request = new Request($this->_url);
+	$request->setAuth($email, $password);
+	$content = $request->post('/token/', array());
+	$tokenObject = $this->_jsonDecode($content);
+	return $this->setToken($tokenObject->token);
     }
 
     /**
@@ -139,10 +139,10 @@ class API {
      * @return boolean
      */
     public function checkToken($token) {
-        if (strlen($token) == Api::TOKEN_STRLEN) {
-            return true;
-        }
-        return false;
+	if (strlen($token) == Api::TOKEN_STRLEN) {
+	    return true;
+	}
+	return false;
     }
 
     /**
@@ -153,10 +153,10 @@ class API {
      * @return void
      */
     public function setToken($token) {
-        if ($this->checkToken($token)) {
-            $this->_token = $token;
-        }
-        return $this;
+	if ($this->checkToken($token)) {
+	    $this->_token = $token;
+	}
+	return $this;
     }
 
     /**
@@ -165,7 +165,7 @@ class API {
      * @return string
      */
     public function getToken() {
-        return $this->_token;
+	return $this->_token;
     }
 
     /**
@@ -187,12 +187,12 @@ class API {
      * @return stdObj contains app data
      */
     public function application_create($applicationName, $type="php") {
-        $resource = '/app/';
-        $data = array(
-            'name' => $applicationName,
-            'type' => $type
-        );
-        return $this->_executePost($resource, $data);
+	$resource = '/app/';
+	$data = array(
+	    'name' => $applicationName,
+	    'type' => $type
+	);
+	return $this->_executePost($resource, $data);
     }
 
     /**
@@ -211,7 +211,7 @@ class API {
      * @return array<stdObj> contains app list
      */
     public function application_getList() {
-        return $this->_executeGet('/app/');
+	return $this->_executeGet('/app/');
     }
 
     /**
@@ -232,8 +232,8 @@ class API {
      * @return stdObj contains app details
      */
     public function application_getDetails($applicationName) {
-        $resource = sprintf('/app/%s/', $applicationName);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/app/%s/', $applicationName);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -254,9 +254,9 @@ class API {
      * @return true
      */
     public function application_delete($applicationName) {
-        $resource = sprintf('/app/%s/', $applicationName);
-        $this->_executeDelete($resource);
-        return true;
+	$resource = sprintf('/app/%s/', $applicationName);
+	$this->_executeDelete($resource);
+	return true;
     }
 
     /**
@@ -279,9 +279,9 @@ class API {
      * @return stdObj contains app and user data
      */
     public function application_addUser($applicationName, $email) {
-        $resource = sprintf('/app/%s/user/', $applicationName);
-        $data = array('email' => email);
-        return $this->_executePost($resource, $data);
+	$resource = sprintf('/app/%s/user/', $applicationName);
+	$data = array('email' => email);
+	return $this->_executePost($resource, $data);
     }
 
     /**
@@ -303,9 +303,9 @@ class API {
      * @return boolean
      */
     public function application_removeUser($applicationName, $userName) {
-        $resource = sprintf('/app/%s/user/%s/', $applicationName, $userName);
-        $this->_executeDelete($resource);
-        return true;
+	$resource = sprintf('/app/%s/user/%s/', $applicationName, $userName);
+	$this->_executeDelete($resource);
+	return true;
     }
 
     /**
@@ -331,12 +331,12 @@ class API {
      * @return stdObj contains deployment data
      */
     public function deployment_create($applicationName, $deploymentName='default') {
-        $resource = sprintf('/app/%s/deployment/', $applicationName);
-        $data = array();
-        if ($deploymentName) {
-            $data['name'] = $deploymentName;
-        }
-        return $this->_executePost($resource, $data);
+	$resource = sprintf('/app/%s/deployment/', $applicationName);
+	$data = array();
+	if ($deploymentName) {
+	    $data['name'] = $deploymentName;
+	}
+	return $this->_executePost($resource, $data);
     }
 
     /**
@@ -358,8 +358,8 @@ class API {
      * @return array<stdObj> contains deployment info data
      */
     public function deployment_getList($applicationName) {
-        $resource = sprintf('/app/%s/deployment/', $applicationName);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/app/%s/deployment/', $applicationName);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -381,8 +381,8 @@ class API {
      * @return stdObj contains deployment details
      */
     public function deployment_getDetails($applicationName, $deploymentName) {
-        $resource = sprintf('/app/%s/deployment/%s/', $applicationName, $deploymentName);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/app/%s/deployment/%s/', $applicationName, $deploymentName);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -406,9 +406,9 @@ class API {
      * @return array<stdObj> contains boxes list
      */
     public function deployment_getBoxeslist($applicationName, $deploymentName, $from, $until) {
-        $resource = sprintf('/app/%s/deployment/%s/boxes/', $applicationName, $deploymentName);
-        $data = array('start' => $from, 'end' => $until);
-        return $this->_executeGet($resource, $requiresToken=true, $data=$data);
+	$resource = sprintf('/app/%s/deployment/%s/boxes/', $applicationName, $deploymentName);
+	$data = array('start' => $from, 'end' => $until);
+	return $this->_executeGet($resource, $requiresToken = true, $data = $data);
     }
 
     /**
@@ -433,8 +433,8 @@ class API {
      * @return stdObj contains deployment data
      */
     public function deployment_update($applicationName, $deploymentName, $data) {
-        $resource = sprintf('/app/%s/deployment/%s/', $applicationName, $deploymentName);
-        return $this->_executePut($resource, $data);
+	$resource = sprintf('/app/%s/deployment/%s/', $applicationName, $deploymentName);
+	return $this->_executePut($resource, $data);
     }
 
     /**
@@ -456,9 +456,9 @@ class API {
      * @return boolean
      */
     public function deployment_delete($applicationName, $deploymentName) {
-        $resource = sprintf('/app/%s/deployment/%s/', $applicationName, $deploymentName);
-        $this->_executeDelete($resource);
-        return true;
+	$resource = sprintf('/app/%s/deployment/%s/', $applicationName, $deploymentName);
+	$this->_executeDelete($resource);
+	return true;
     }
 
     /**
@@ -484,22 +484,22 @@ class API {
      * @return stdObj contains log data
      */
     public function deployment_getLog($applicationName, $deploymentName, $logType="error", $lastTime=null) {
-        $url = sprintf(
+	$url = sprintf(
             '/app/%s/deployment/%s/log/%s/',
             $applicationName,
             $deploymentName,
             $logType
-        );
-        $resource = $url;
-        if (!is_null($lastTime)) {
-            if (is_string($lastTime)) {
-                $timestamp = strtotime($lastTime);
-            } else {
-                $timestamp = $lastTime;
-            }
-            $resource = sprintf('%s?timestamp=%s', $url, $timestamp);
-        }
-        return $this->_executeGet($resource);
+	);
+	$resource = $url;
+	if (!is_null($lastTime)) {
+	    if (is_string($lastTime)) {
+		$timestamp = strtotime($lastTime);
+	    } else {
+		$timestamp = $lastTime;
+	    }
+	    $resource = sprintf('%s?timestamp=%s', $url, $timestamp);
+	}
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -522,12 +522,65 @@ class API {
      * @return array<stdObj> contains addon list
      */
     public function deployment_addAddon($applicationName, $deploymentName, $addonName) {
-        $resource = sprintf('/app/%s/deployment/%s/addon/', $applicationName, $deploymentName);
-        $data = array('addon' => $addonName);
-        return $this->_executePost($resource, $data);
+	$resource = sprintf('/app/%s/deployment/%s/addon/', $applicationName, $deploymentName);
+	$data = array('addon' => $addonName);
+	return $this->_executePost($resource, $data);
+    }
+
+    /**
+     * Adds the given key and value to the config addon
+     *
+     * @param string $applicationName applications name
+     * @param string $deploymentName deployments name
+     * @param array $variables entries for config settings [KEY1=VALUE1, KEY2=VALUE2]
+     * @param boolean $force_add force option for update
+     *
+     * @throws TokenRequiredError
+     * @throws BadRequestError
+     * @throws UnauthorizedError
+     * @throws ForbiddenError
+     * @throws GoneError
+     * @throws InternalServerError
+     * @throws NotImplementedError
+     * @throws ThrottledError
+     * @throws CCException
+     *
+     * @return array<stdObj>
+     */
+    public function deployment_addConfig($applicationName, $deploymentName, array $variables, $force_add) {
+	$resource = sprintf('/app/%s/deployment/%s/config/', $applicationName, $deploymentName);
+	$data = array(
+	    'variables' => $variables,
+	    'force_add' => $force_add
+	);
+	return $this->_executePost($resource, $data);
+    }
+
+    /**
+     * return deployment.config value
+     *
+     * @param string $applicationName applications name
+     * @param string $deploymentName deployments name
+     * @param string $key config key
+     *
+     * @throws TokenRequiredError
+     * @throws BadRequestError
+     * @throws UnauthorizedError
+     * @throws ForbiddenError
+     * @throws ConflictDuplicateError
+     * @throws GoneError
+     * @throws InternalServerError
+     * @throws NotImplementedError
+     * @throws ThrottledError
+     * @throws CCException
+     *
+     * @return array<stdObj> contains deployment config data with key
+     */
+    public function deployment_getConfig($applicationName, $deploymentName, $key) {
+	$resource = sprintf('/app/%s/deployment/%s/config/%s', $applicationName, $deploymentName, $key);
+	return $this->_executeGet($resource);
     }
     
-
     /**
      * get sso login data
      *
@@ -548,8 +601,8 @@ class API {
      * @return stdObj sso login data
      */
     public function deployment_getAddonSSO($applicationName, $deploymentName, $addonName) {
-        $resource = sprintf('/app/%s/deployment/%s/addon/%s/login', $applicationName, $deploymentName, $addonName);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/app/%s/deployment/%s/addon/%s/login', $applicationName, $deploymentName, $addonName);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -572,9 +625,9 @@ class API {
      * @return stdObj contains alias details
      */
     public function alias_create($applicationName, $deploymentName, $aliasName) {
-        $resource = sprintf('/app/%s/deployment/%s/alias/', $applicationName, $deploymentName);
-        $data = array('name' => $aliasName);
-        return $this->_executePost($resource, $data);
+	$resource = sprintf('/app/%s/deployment/%s/alias/', $applicationName, $deploymentName);
+	$data = array('name' => $aliasName);
+	return $this->_executePost($resource, $data);
     }
 
     /**
@@ -597,8 +650,8 @@ class API {
      * @return stdObj contains app details
      */
     public function alias_getDetails($applicationName, $deploymentName, $aliasName) {
-        $resource = sprintf('/app/%s/deployment/%s/alias/%s/', $applicationName, $deploymentName, $aliasName);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/app/%s/deployment/%s/alias/%s/', $applicationName, $deploymentName, $aliasName);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -621,9 +674,9 @@ class API {
      * @return boolean
      */
     public function alias_delete($applicationName, $deploymentName, $aliasName) {
-        $resource = sprintf('/app/%s/deployment/%s/alias/%s/', $applicationName, $deploymentName, $aliasName);
-        $this->_executeDelete($resource);
-        return true;
+	$resource = sprintf('/app/%s/deployment/%s/alias/%s/', $applicationName, $deploymentName, $aliasName);
+	$this->_executeDelete($resource);
+	return true;
     }
 
     /**
@@ -642,7 +695,7 @@ class API {
      * @return array<stdObj> contains user list
      */
     public function user_getList() {
-        return $this->_executeGet('/user/');
+	return $this->_executeGet('/user/');
     }
 
     /**
@@ -665,13 +718,13 @@ class API {
      * @return stdObj contains user details
      */
     public function user_create($userName, $email, $password) {
-        $resource = '/user/';
-        $data = array(
-            'username' => $userName,
-            'email' => $email,
-            'password' => $password
-        );
-        return $this->_executePost($resource, $data, $requiresToken=false);
+	$resource = '/user/';
+	$data = array(
+	    'username' => $userName,
+	    'email' => $email,
+	    'password' => $password
+	);
+	return $this->_executePost($resource, $data, $requiresToken = false);
     }
 
     /**
@@ -692,8 +745,8 @@ class API {
      * @return stdObj contains user details
      */
     public function user_getDetails($userName) {
-        $resource = sprintf('/user/%s/', $userName);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/user/%s/', $userName);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -715,12 +768,12 @@ class API {
      * @return boolean
      */
     public function user_activate($userName, $activationCode) {
-        $resource = sprintf('/user/%s/', $userName);
-        $data = array(
-            'activation_code' => $activationCode
-        );
-        $this->_executePut($resource, $data, $requiresToken=false);
-        return true;
+	$resource = sprintf('/user/%s/', $userName);
+	$data = array(
+	    'activation_code' => $activationCode
+	);
+	$this->_executePut($resource, $data, $requiresToken = false);
+	return true;
     }
 
     /**
@@ -741,9 +794,9 @@ class API {
      * @return boolean
      */
     public function user_delete($userName) {
-        $resource = sprintf('/user/%s/', $userName);
-        $this->_executeDelete($resource);
-        return true;
+	$resource = sprintf('/user/%s/', $userName);
+	$this->_executeDelete($resource);
+	return true;
     }
 
     /**
@@ -764,8 +817,8 @@ class API {
      * @return array<stdObj> contains key list
      */
     public function user_getKeyList($userName) {
-        $resource = sprintf('/user/%s/key/', $userName);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/user/%s/key/', $userName);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -788,9 +841,9 @@ class API {
      * @return stdObj contains key data
      */
     public function user_addKey($userName, $publicKey) {
-        $resource = sprintf('/user/%s/key/', $userName);
-        $data = array('key' => $publicKey);
-        return $this->_executePost($resource, $data);
+	$resource = sprintf('/user/%s/key/', $userName);
+	$data = array('key' => $publicKey);
+	return $this->_executePost($resource, $data);
     }
 
     /**
@@ -813,9 +866,9 @@ class API {
      * @return boolean
      */
     public function user_removeKey($userName, $keyId) {
-        $resource = sprintf('/user/%s/key/%s/', $userName, $keyId);
-        $this->_executeDelete($resource);
-        return true;
+	$resource = sprintf('/user/%s/key/%s/', $userName, $keyId);
+	$this->_executeDelete($resource);
+	return true;
     }
 
     /**
@@ -839,8 +892,8 @@ class API {
      * @return stdObj contains billing account data
      */
     public function billingAccount_create($userName, $data) {
-        $resource = sprintf('/user/%s/billing/', $userName);
-        return $this->_executePost($resource, $data);
+	$resource = sprintf('/user/%s/billing/', $userName);
+	return $this->_executePost($resource, $data);
     }
 
     /**
@@ -863,8 +916,8 @@ class API {
      * @return stdObj contains billing account data
      */
     public function billingAccount_getDetails($userName, $billingName) {
-        $resource = sprintf('/user/%s/billing/%s/', $userName, $billingName);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/user/%s/billing/%s/', $userName, $billingName);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -887,8 +940,8 @@ class API {
      * @return stdObj contains billing account data
      */
     public function billingAccount_update($userName, $billingName, $data) {
-        $resource = sprintf('/user/%s/billing/%s/', $userName, $billingName);
-        return $this->_executePut($resource, $data);
+	$resource = sprintf('/user/%s/billing/%s/', $userName, $billingName);
+	return $this->_executePut($resource, $data);
     }
 
     /**
@@ -909,8 +962,8 @@ class API {
      * @return array<stdObj> contains billing account data
      */
     public function billingAccount_getList($userName) {
-        $resource = sprintf('/user/%s/billing/', $userName);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/user/%s/billing/', $userName);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -934,8 +987,8 @@ class API {
      * @return stdObj contains billing voucher data
      */
     public function billingAccount_addVoucher($userName, $billingName, $data) {
-        $resource = sprintf('/user/%s/billing/%s/voucher/', $userName, $billingName);
-        return $this->_executePost($resource, $data);
+	$resource = sprintf('/user/%s/billing/%s/voucher/', $userName, $billingName);
+	return $this->_executePost($resource, $data);
     }
 
     /**
@@ -958,8 +1011,8 @@ class API {
      */
     public function billingAccount_getVoucherList($userName, $billingName)
     {
-        $resource = sprintf('/user/%s/billing/%s/voucher/', $userName, $billingName);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/user/%s/billing/%s/voucher/', $userName, $billingName);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -978,9 +1031,9 @@ class API {
      * @return array<stdObj> contains all addons
      */
     public function addon_getList() {
-        return $this->_executeGet('/addon/', $requiresToken=false);
+	return $this->_executeGet('/addon/', $requiresToken = false);
     }
-    
+
     /**
      * return list of all support plans
      *
@@ -995,9 +1048,9 @@ class API {
      * @return array<stdObj> contains all available support plans
      */
     public function support_getList() {
-        return $this->_executeGet('/support/', $requiresToken=false);
+	return $this->_executeGet('/support/', $requiresToken = false);
     }
-    
+
     /**
      * return a single support plan
      *
@@ -1014,8 +1067,8 @@ class API {
      * @return array<stdObj> contains all available support plans
      */
     public function support_getDetails($planName) {
-        $resource = sprintf('/support/%s/', $planName);
-        return $this->_executeGet($resource, $requiresToken=false);
+	$resource = sprintf('/support/%s/', $planName);
+	return $this->_executeGet($resource, $requiresToken = false);
     }
 
     /**
@@ -1039,14 +1092,14 @@ class API {
      * @return stdObj contains worker data
      */
     public function worker_create($applicationName, $deploymentName, $command, $parameter='', $size=1) {
-        $resource = sprintf('/app/%s/deployment/%s/worker/', $applicationName, $deploymentName);
-        $data = array();
-        $data['command'] = $command;
-        if (strlen($parameter) > 0) {
-            $data['params'] = $parameter;
-        }
-        $data['size'] = $size;
-        return $this->_executePost($resource, $data);
+	$resource = sprintf('/app/%s/deployment/%s/worker/', $applicationName, $deploymentName);
+	$data = array();
+	$data['command'] = $command;
+	if (strlen($parameter) > 0) {
+	    $data['params'] = $parameter;
+	}
+	$data['size'] = $size;
+	return $this->_executePost($resource, $data);
     }
 
     /**
@@ -1069,8 +1122,8 @@ class API {
      * @return stdObj contains worker data
      */
     public function worker_getDetails($applicationName, $deploymentName, $workerId) {
-        $resource = sprintf('/app/%s/deployment/%s/worker/%s/', $applicationName, $deploymentName, $workerId);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/app/%s/deployment/%s/worker/%s/', $applicationName, $deploymentName, $workerId);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -1092,8 +1145,8 @@ class API {
      * @return array<stdObj> contains worker data
      */
     public function worker_getList($applicationName, $deploymentName) {
-        $resource = sprintf('/app/%s/deployment/%s/worker/', $applicationName, $deploymentName);
-        return $this->_executeGet($resource);
+	$resource = sprintf('/app/%s/deployment/%s/worker/', $applicationName, $deploymentName);
+	return $this->_executeGet($resource);
     }
 
     /**
@@ -1116,45 +1169,45 @@ class API {
      * @return boolean
      */
     public function worker_delete($applicationName, $deploymentName, $workerId) {
-        $resource = sprintf('/app/%s/deployment/%s/worker/%s/', $applicationName, $deploymentName, $workerId);
-        $this->_executeDelete($resource);
-        return true;
+	$resource = sprintf('/app/%s/deployment/%s/worker/%s/', $applicationName, $deploymentName, $workerId);
+	$this->_executeDelete($resource);
+	return true;
     }
 
     private function _executeGet($resource, $requiresToken=true, $data=array()) {
         if($requiresToken) {
-            $this->requiresToken();
-        }
-        $request = new Request($this->_url, $this->getToken());
-        $content = $request->get($resource, $data);
-        return $this->_jsonDecode($content);
+	    $this->requiresToken();
+	}
+	$request = new Request($this->_url, $this->getToken());
+	$content = $request->get($resource, $data);
+	return $this->_jsonDecode($content);
     }
 
     private function _executePost($resource, $data, $requiresToken=true) {
         if($requiresToken) {
-            $this->requiresToken();
-        }
-        $request = new Request($this->_url, $this->getToken());
-        $content = $request->post($resource, $data);
-        return $this->_jsonDecode($content);
+	    $this->requiresToken();
+	}
+	$request = new Request($this->_url, $this->getToken());
+	$content = $request->post($resource, $data);
+	return $this->_jsonDecode($content);
     }
 
     private function _executePut($resource, $data, $requiresToken=true) {
         if($requiresToken) {
-            $this->requiresToken();
-        }
-        $request = new Request($this->_url, $this->getToken());
-        $content = $request->put($resource, $data);
-        return true;
+	    $this->requiresToken();
+	}
+	$request = new Request($this->_url, $this->getToken());
+	$content = $request->put($resource, $data);
+	return true;
     }
 
     private function _executeDelete($resource, $requiresToken=true) {
         if($requiresToken) {
-            $this->requiresToken();
-        }
-        $request = new Request($this->_url, $this->getToken());
-        $content = $request->delete($resource);
-        return $this->_jsonDecode($content);
+	    $this->requiresToken();
+	}
+	$request = new Request($this->_url, $this->getToken());
+	$content = $request->delete($resource);
+	return $this->_jsonDecode($content);
     }
 
     /**
@@ -1167,11 +1220,11 @@ class API {
      * @return mixed array (itemlist) or stdObj (single item)
      */
     private function _jsonDecode($content) {
-        $data = json_decode($content);
-        if (strlen($content) > 0 && json_last_error() !== JSON_ERROR_NONE) {
-            throw new CCException("no valid json: " . $content, 500);
-        }
-        return $data;
+	$data = json_decode($content);
+	if (strlen($content) > 0 && json_last_error() !== JSON_ERROR_NONE) {
+	    throw new CCException("no valid json: " . $content, 500);
+	}
+	return $data;
     }
 }
 
@@ -1186,110 +1239,121 @@ class API {
  */
 
 class CCException extends \Exception {
+    
 }
 
 /*
- We raise this exception if the API was unreachable.
+  We raise this exception if the API was unreachable.
  */
 
 class ConnectionException extends CCException {
+    
 }
 
 /*
- We raise this exception if a method requires a token but self._token
- is none.
+  We raise this exception if a method requires a token but self._token
+  is none.
 
- Use the create_token() method to get a new token.
+  Use the create_token() method to get a new token.
  */
 
 class TokenRequiredError extends CCException {
-    public function __toString()
-    {
-        return 'No valid token. Use create_token(email, password) to get a new one';
+
+    public function __toString() {
+	return 'No valid token. Use create_token(email, password) to get a new one';
     }
+
 }
 
 /*
- We raise this exception whenever the API answers with HTTP STATUS 400
- BAD REQUEST.
+  We raise this exception whenever the API answers with HTTP STATUS 400
+  BAD REQUEST.
  */
 
 class BadRequestError extends CCException {
+
     private $_msgs = array();
 
-    public function __construct($message)
-    {
-        $this->message = 'BadRequest';
-        /*
-         * You will get a string like this
-         * Bad Request {"lastname": "This field is required.", "firstname": "This field is required."}
-         * therefore we cut the first 12 chars from errorMessage
-         */
-        $obj = json_decode(substr($message, 12));
+    public function __construct($message) {
+	$this->message = 'BadRequest';
+	/*
+	 * You will get a string like this
+	 * Bad Request {"lastname": "This field is required.", "firstname": "This field is required."}
+	 * therefore we cut the first 12 chars from errorMessage
+	 */
+	$obj = json_decode(substr($message, 12));
 
-        if (json_last_error() === JSON_ERROR_NONE && !empty($obj)) {
-            $this->message = '';
-            foreach ($obj as $k => $v) {
-                $this->message .= sprintf("%s: %s\n", $k, $v);
-            }
-        }
+	if (json_last_error() === JSON_ERROR_NONE && !empty($obj)) {
+	    $this->message = '';
+	    foreach ($obj as $k => $v) {
+		$this->message .= sprintf("%s: %s\n", $k, $v);
+	    }
+	}
     }
+
 }
 
 /*
- We raise this exception whenever the API answers with HTTP STATUS 401
- UNAUTHORIZED.
+  We raise this exception whenever the API answers with HTTP STATUS 401
+  UNAUTHORIZED.
  */
 
 class UnauthorizedError extends CCException {
+    
 }
 
 /*
- We raise this exception whenever the API answers with HTTP STATUS 403
- FORBIDDEN.
+  We raise this exception whenever the API answers with HTTP STATUS 403
+  FORBIDDEN.
  */
 
 class ForbiddenError extends CCException {
+    
 }
 
 /*
- We raise this exception whenever the API answers with HTTP STATUS 409
- DUPLICATE ENTRY.
+  We raise this exception whenever the API answers with HTTP STATUS 409
+  DUPLICATE ENTRY.
  */
 
 class ConflictDuplicateError extends CCException {
+    
 }
 
 /*
- We raise this exception whenever the API answers with HTTP STATUS 410
- GONE.
+  We raise this exception whenever the API answers with HTTP STATUS 410
+  GONE.
  */
 
 class GoneError extends CCException {
+    
 }
 
 /*
- We raise this exception whenever the API answers with HTTP STATUS 500
- INTERNAL SERVER ERROR.
+  We raise this exception whenever the API answers with HTTP STATUS 500
+  INTERNAL SERVER ERROR.
  */
 
 class InternalServerError extends CCException {
+    
 }
 
 /*
- We raise this exception whenever the API answers with HTTP STATUS 501
- NOT IMPLEMENTED.
+  We raise this exception whenever the API answers with HTTP STATUS 501
+  NOT IMPLEMENTED.
  */
 
 class NotImplementedError extends CCException {
+    
 }
 
 /*
- We raise this exception whenever the API answers with HTTP STATUS 503
- THROTTLED.
+  We raise this exception whenever the API answers with HTTP STATUS 503
+  THROTTLED.
  */
 
 class ThrottledError extends CCException {
+    
 }
 
 ###
@@ -1298,10 +1362,10 @@ class ThrottledError extends CCException {
 #
 ###
 /*
- Request is used internally to actually fire API requests. It has some
- handy shortcut methods for POST, GET, PUT and DELETE, sets correct
- headers for each method, takes care of encoding data and handles all API
- errors by throwing exceptions.
+  Request is used internally to actually fire API requests. It has some
+  handy shortcut methods for POST, GET, PUT and DELETE, sets correct
+  headers for each method, takes care of encoding data and handles all API
+  errors by throwing exceptions.
  */
 
 class Request {
@@ -1319,9 +1383,9 @@ class Request {
      * @param string $version client-version [default:Api::VERSION]
      */
     public function __construct($url, $token=null, $version=Api::VERSION) {
-        $this->_url = $url;
-        $this->_token = $token;
-        $this->_version = $version;
+	$this->_url = $url;
+	$this->_token = $token;
+	$this->_version = $version;
     }
 
     /**
@@ -1331,8 +1395,8 @@ class Request {
      * @param string $password users password
      */
     public function setAuth($email, $password) {
-        $this->_email = $email;
-        $this->_password = $password;
+	$this->_email = $email;
+	$this->_password = $password;
     }
 
     /**
@@ -1354,7 +1418,7 @@ class Request {
      * @return string json encoded servers response
      */
     public function post($resource, $data) {
-        return $this->_request($resource, \HTTP_Request2::METHOD_POST, $data);
+	return $this->_request($resource, \HTTP_Request2::METHOD_POST, $data);
     }
 
     /**
@@ -1374,7 +1438,7 @@ class Request {
      * @return string json encoded servers response
      */
     public function get($resource, $data=array()) {
-        return $this->_request($resource, \HTTP_Request2::METHOD_GET, $data);
+	return $this->_request($resource, \HTTP_Request2::METHOD_GET, $data);
     }
 
     /**
@@ -1395,7 +1459,7 @@ class Request {
      * @return string json encoded servers response
      */
     public function put($resource, $data) {
-        return $this->_request($resource, \HTTP_Request2::METHOD_PUT, $data);
+	return $this->_request($resource, \HTTP_Request2::METHOD_PUT, $data);
     }
 
     /**
@@ -1415,7 +1479,7 @@ class Request {
      * @return string json encoded servers response
      */
     public function delete($resource) {
-        return $this->_request($resource, \HTTP_Request2::METHOD_DELETE);
+	return $this->_request($resource, \HTTP_Request2::METHOD_DELETE);
     }
 
     /**
@@ -1440,90 +1504,90 @@ class Request {
      * @return string json encoded servers response
      */
     private function _request($resource, $method=\HTTP_Request2::METHOD_GET, $data=array(), $headers=array()) {
-        $url = $this->_url . $resource;
-        $request = new \HTTP_Request2($url);
-        $request->setConfig('ssl_verify_peer', API::SSL_VERIFY_PEER);
+	$url = $this->_url . $resource;
+	$request = new \HTTP_Request2($url);
+	$request->setConfig('ssl_verify_peer', API::SSL_VERIFY_PEER);
 
-        $methods = array(
-            'options' => \HTTP_Request2::METHOD_OPTIONS,
-            'get' => \HTTP_Request2::METHOD_GET,
-            'head' => \HTTP_Request2::METHOD_HEAD,
-            'post' => \HTTP_Request2::METHOD_POST,
-            'put' => \HTTP_Request2::METHOD_PUT,
-            'delete' => \HTTP_Request2::METHOD_DELETE,
-            'trace' => \HTTP_Request2::METHOD_TRACE,
-            'connect' => \HTTP_Request2::METHOD_CONNECT
-        );
-        $request->setMethod($methods[strtolower($method)]);
+	$methods = array(
+	    'options' => \HTTP_Request2::METHOD_OPTIONS,
+	    'get' => \HTTP_Request2::METHOD_GET,
+	    'head' => \HTTP_Request2::METHOD_HEAD,
+	    'post' => \HTTP_Request2::METHOD_POST,
+	    'put' => \HTTP_Request2::METHOD_PUT,
+	    'delete' => \HTTP_Request2::METHOD_DELETE,
+	    'trace' => \HTTP_Request2::METHOD_TRACE,
+	    'connect' => \HTTP_Request2::METHOD_CONNECT
+	);
+	$request->setMethod($methods[strtolower($method)]);
 
-        #
-        # If the current API instance has a valid token we add the Authorization
-        # header with the correct token.
-        #
+	#
+	# If the current API instance has a valid token we add the Authorization
+	# header with the correct token.
+	#
         # In case we do not have a valid token but email and password are
-        # provided we automatically use them to add a HTTP Basic Authenticaion
-        # header to the request to create a new token.
-        #
+	# provided we automatically use them to add a HTTP Basic Authenticaion
+	# header to the request to create a new token.
+	#
 
         if ($this->_token) {
-            $headers['Authorization'] = sprintf('cc_auth_token="%s"', $this->_token);
-        } else if ($this->_email && $this->_password) {
-            $request->setAuth($this->_email, $this->_password, \HTTP_Request2::AUTH_BASIC);
-        }
+	    $headers['Authorization'] = sprintf('cc_auth_token="%s"', $this->_token);
+	} else if ($this->_email && $this->_password) {
+	    $request->setAuth($this->_email, $this->_password, \HTTP_Request2::AUTH_BASIC);
+	}
 
-        #
-        # The API expects the body to be urlencoded. If data was passed to
-        # the request method we therefore use urlencode from urllib.
-        #
+	#
+	# The API expects the body to be urlencoded. If data was passed to
+	# the request method we therefore use urlencode from urllib.
+	#
         if (!empty($data)) {
-            if ($request->getMethod() == \HTTP_Request2::METHOD_GET) {
-                $url = $request->getUrl();
-                $url->setQueryVariables($data);
-            } else {
-                // works with post and put
-                $request->addPostParameter($data);
-                $request->setBody(http_build_query($data));
-            }
-        }
+	    if ($request->getMethod() == \HTTP_Request2::METHOD_GET) {
+		$url = $request->getUrl();
+		$url->setQueryVariables($data);
+	    } else {
+		// works with post and put
+		$request->addPostParameter($data);
+		$request->setBody(http_build_query($data));
+	    }
+	}
 
-        #
-        # We set the User-Agent Header to pycclib and the local version.
-        # This enables basic statistics about still used pycclib versions in
-        # the wild.
-        #
+	#
+	# We set the User-Agent Header to pycclib and the local version.
+	# This enables basic statistics about still used pycclib versions in
+	# the wild.
+	#
         $headers['User-Agent'] = sprintf('phpcclib/%s', $this->_version);
-        #
-        # The API expects PUT or POST data to be x-www-form-urlencoded so we
-        # also set the correct Content-Type header.
-        #
+	#
+	# The API expects PUT or POST data to be x-www-form-urlencoded so we
+	# also set the correct Content-Type header.
+	#
         if (strtoupper($method) == 'PUT' || strtoupper($method) == 'POST') {
-            $headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        }
-        #
-        # We also set the Content-Length and Accept-Encoding headers.
-        #
+	    $headers['Content-Type'] = 'application/x-www-form-urlencoded';
+	}
+	#
+	# We also set the Content-Length and Accept-Encoding headers.
+	#
         //$headers['Content-Length'] = strlen($body);
-        $headers['Accept-Encoding'] = 'compress, gzip';
-        #
-        # Finally we fire the actual request.
-        #
+	$headers['Accept-Encoding'] = 'compress, gzip';
+	#
+	# Finally we fire the actual request.
+	#
         foreach ($headers as $k => $v) {
-            $request->setHeader(sprintf('%s: %s', $k, $v));
-        }
+	    $request->setHeader(sprintf('%s: %s', $k, $v));
+	}
         for ($i=1; $i<6; $i++) {
-            try {
-                $response = $request->send();
-                return $this->_return($response);
+	    try {
+		$response = $request->send();
+		return $this->_return($response);
             }
             catch (\HTTP_Request2_Exception $e) {
-                # if we could not reach the API we wait 1s and try again
-                sleep(1);
-                # if we tried for the fifth time we give up - and cry a little
-                if ($i == 5) {
-                    throw new ConnectionException('Could not connect to API...');
-                }
-            }
-        }
+		# if we could not reach the API we wait 1s and try again
+		sleep(1);
+		# if we tried for the fifth time we give up - and cry a little
+		if ($i == 5) {
+		    throw new ConnectionException('Could not connect to API...');
+		}
+	    }
+	}
     }
 
     /**
@@ -1544,51 +1608,44 @@ class Request {
      * @return string json encoded servers response
      */
     private function _return($resp) {
-        #
-        # And handle the possible responses according to their HTTP STATUS
-        # CODES.
-        #
+	#
+	# And handle the possible responses according to their HTTP STATUS
+	# CODES.
+	#
         # 200 OK, 201 CREATED and 204 DELETED result in returning the actual
-        # response.
-        #
+	# response.
+	#
         # All non success STATUS CODES raise an exception containing
-        # the API error message.
-        #
+	# the API error message.
+	#
         if (in_array($resp->getStatus(), array(200, 201, 204)) !== false) {
-            return $resp->getBody();
-        }
-        else if ($resp->getStatus() == 400) {
-            throw new BadRequestError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 401) {
-            throw new UnauthorizedError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 403) {
-            throw new ForbiddenError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 409) {
-            throw new ConflictDuplicateError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 410) {
-            throw new GoneError($resp->getBody(), $resp->getStatus());
-        }
-        #
-        # 500 INTERNAL SERVER ERRORs normally shouldn't happen...
-        #
+	    return $resp->getBody();
+	} else if ($resp->getStatus() == 400) {
+	    throw new BadRequestError($resp->getBody(), $resp->getStatus());
+	} else if ($resp->getStatus() == 401) {
+	    throw new UnauthorizedError($resp->getBody(), $resp->getStatus());
+	} else if ($resp->getStatus() == 403) {
+	    throw new ForbiddenError($resp->getBody(), $resp->getStatus());
+	} else if ($resp->getStatus() == 409) {
+	    throw new ConflictDuplicateError($resp->getBody(), $resp->getStatus());
+	} else if ($resp->getStatus() == 410) {
+	    throw new GoneError($resp->getBody(), $resp->getStatus());
+	}
+	#
+	# 500 INTERNAL SERVER ERRORs normally shouldn't happen...
+	#
         else if ($resp->getStatus() == 500) {
-            throw new InternalServerError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 501) {
-            throw new NotImplementedError($resp->getBody(), $resp->getStatus());
-        }
-        else if ($resp->getStatus() == 503) {
-            throw new ThrottledError($resp->getBody(), $resp->getStatus());
-        }
-        #
-        # throw CCException anyway
-        #
+	    throw new InternalServerError($resp->getBody(), $resp->getStatus());
+	} else if ($resp->getStatus() == 501) {
+	    throw new NotImplementedError($resp->getBody(), $resp->getStatus());
+	} else if ($resp->getStatus() == 503) {
+	    throw new ThrottledError($resp->getBody(), $resp->getStatus());
+	}
+	#
+	# throw CCException anyway
+	#
         else {
-            throw new CCException ($resp->getBody(), $resp->getStatus());
-        }
+	    throw new CCException($resp->getBody(), $resp->getStatus());
+	}
     }
 }
