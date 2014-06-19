@@ -120,7 +120,7 @@ class API {
      * @throws ThrottledError
      * @throws CCException
      *
-     * @return boolean
+     * @return $this
      */
     public function auth($email, $password) {
         $request = new Request($this->_url);
@@ -150,7 +150,7 @@ class API {
      *
      * @param string $token token to set
      *
-     * @return void
+     * @return $this
      */
     public function setToken($token) {
         if ($this->checkToken($token)) {
