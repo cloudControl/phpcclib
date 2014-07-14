@@ -42,7 +42,7 @@ class API {
      * api version
      * @var string
      */
-    const VERSION = '0.1.5';
+    const VERSION = '0.1.6';
 
     /**
      * token length - to check the token
