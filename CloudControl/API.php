@@ -1442,7 +1442,7 @@ class Request {
     private function _request($resource, $method=\HTTP_Request2::METHOD_GET, $data=array(), $headers=array()) {
         $url = $this->_url . $resource;
         $request = new \HTTP_Request2($url);
-        $request->setConfig('ssl_verify_peer', API::SSL_VERIFY_PEER);
+        $request->setConfig(array('ssl_verify_peer'=> API::SSL_VERIFY_PEER, 'ssl_cafile' => realpath(dirname(__FILE__)).'/cacert.pem'));
 
         $methods = array(
             'options' => \HTTP_Request2::METHOD_OPTIONS,
